@@ -50,7 +50,7 @@
 
 - name: change apache port 
   ansible.builtin.replace:
-      path: /etc/apache2/apache2.conf
+      path: /etc/apache2/ports.conf
       regexp: '^Listen\s+80$'
       replace: 'Listen 81'
   
