@@ -1,0 +1,33 @@
+---
+# tasks file for pomfile-edit
+- name: Edit PetClinicApplication.java
+  lineinfile:
+        path: /home/pet-clinic/spring-petclinic/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java
+        insertafter: 'import org.springframework.web.servlet.i18n.SessionLocaleResolver;'
+        line: 'import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;'
+
+- name: Modify PetClinicApplication.java class definition
+  replace:
+        path: /home/pet-clinic/spring-petclinic/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java
+        regexp: 'public class PetClinicApplication {'
+        replace: 'public class PetClinicApplication extends SpringBootServletInitializer {'
+
+- name: Edit pom.xml
+  blockinfile:
+        path: /home/pet-clinic/spring-petclinic/pom.xml
+        block: |
+          <packaging>war</packaging>
+        insertafter: '<version>3.2.0-SNAPSHOT</version>'
+- name: Add dependency to pom.xml
+  blockinfile:
+        path: /home/pet-clinic/spring-petclinic/pom.xml
+        block: |
+          <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-tomcat</artifactId>
+              <scope>provided</scope>
+          </dependency>
+        marker: '# {mark} ANSIBLE MANAGED BLOCK'
+        insertafter: '</dependencies>'
+  become: yes
+

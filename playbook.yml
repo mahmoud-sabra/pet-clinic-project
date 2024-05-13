@@ -1,0 +1,10 @@
+
+- hosts: localhost
+  become: yes
+  roles:
+          - pet-clinic
+          - tomcat-install
+          - pomfile-edit
+          - build-app 
+          - deploy-run-tomcat
+          - nagios

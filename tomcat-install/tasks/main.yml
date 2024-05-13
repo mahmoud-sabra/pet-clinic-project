@@ -1,0 +1,35 @@
+---
+# tasks file for tomcat-install
+#
+
+- name: Install Tomcat at pet-clinic user
+  become_user: pet-clinic
+  become: yes
+  get_url:
+            url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.23/bin/apache-tomcat-10.1.23.tar.gz
+            dest: /home/pet-clinic/apache-tomcat-10.1.23.tar.gz
+- name: Extract Tomcat tar file
+  unarchive:
+            src: /home/pet-clinic/apache-tomcat-10.1.23.tar.gz
+            dest: /home/pet-clinic/
+
+- name: Add JAVA_HOME to .bashrc
+  lineinfile:
+            path: /home/pet-clinic/.bashrc
+            line: 'export JAVA_HOME=/home/pet-clinic/jdk-17.0.11'
+            create: yes
+            mode: '0755'
+- name: configure tomcat to have access to its deployment manager
+  lineinfile:
+            path: /home/pet-clinic/apache-tomcat-10.1.23/conf/tomcat-users.xml
+            line: |
+             <role rolename="manager-gui"/>
+             <user username="tomcat" password="s3cret" roles="manager-gui"/>
+            insertafter: '<tomcat-users>'
+            create: yes
+- name: Change Tomcat Port
+  lineinfile:
+            path: /home/pet-clinic/apache-tomcat-10.1.23/conf/server.xml
+            regexp: '^\s*<Connector port="8080" .*'
+            line: '<Connector port="9090" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" maxParameterCount="1000" />'
+            state: present

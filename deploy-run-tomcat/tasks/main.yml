@@ -1,0 +1,11 @@
+---
+# tasks file for deploy-run-tomcat
+    - name: Copy WAR file to Tomcat webapps directory
+      become: yes
+      command: cp /home/pet-clinic/spring-petclinic/target/spring-petclinic-3.2.0-SNAPSHOT.war /home/pet-clinic/apache-tomcat-10.1.23/webapps/
+
+    - name: Run Tomcat startup script
+      become: yes
+      command: ./startup.sh
+      args:
+        chdir: /home/pet-clinic/apache-tomcat-10.1.23/bin
